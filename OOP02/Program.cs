@@ -35,21 +35,41 @@
              * - Yes! You can write code, like 'if' conditions or math equations, 
              * inside the 'get' or 'set' blocks to check the data before saving it.
              */
-               //public class Rectangle
-               // {
-               //     // These are normal properties
-               //     public double Length { get; set; }
-               //     public double Width { get; set; }
+            //public class Rectangle
+            // {
+            //     // These are normal properties
+            //     public double Length { get; set; }
+            //     public double Width { get; set; }
 
-               //     // This is a Read-Only property (it only has 'get', no 'set').
-               //     // It calculates the value every time you ask for it.
-               //     public double Area
-               //     {
-               //         get { return Length * Width; }
-               //     }
-               // }
+            //     // This is a Read-Only property (it only has 'get', no 'set').
+            //     // It calculates the value every time you ask for it.
+            //     public double Area
+            //     {
+            //         get { return Length * Width; }
+            //     }
+            // }
 
-             #endregion
+            #endregion
+
+            #region Part 01: Theoretical Questions - Q3
+            /*
+             * Q3(a):
+             * - It is called an "Indexer".
+             * - Its purpose is to allow you to treat an object like an array. 
+             * You can get or set values using the [ ] brackets directly on the object.
+             *
+             * Q3(b):
+             * - What happens: It will cause an "IndexOutOfRangeException" error (the program will crash) 
+             * because the array size is only 5.
+             * - To make it safer: Add an 'if' condition inside the 'get' and 'set' to check if the index 
+             * is between 0 and the array length before accessing it.
+             *
+             * Q3(c):
+             * - Yes, a class can have multiple indexers (this is called Indexer Overloading).
+             * - Example: You can have one indexer that uses an 'int' index (like an ID) 
+             * and another indexer that uses a 'string' (like a name) to find data in the same class.
+             */
+            #endregion
+        }
     }
-}
 }
