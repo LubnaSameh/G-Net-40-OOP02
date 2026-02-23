@@ -70,6 +70,23 @@
              * and another indexer that uses a 'string' (like a name) to find data in the same class.
              */
             #endregion
+
+            #region Part 01: Theoretical Questions - Q4
+            /*
+             * Q4(a):
+             * - Static Keyword: It means that TotalOrders belongs to the Class itself, not to a specific object
+             * There is only one copy of this variable shared by all orders
+             * - Difference from Item: The Item field belongs to the object instance
+             * Every time you create a new order, it has its own unique Item name
+             * But 'TotalOrders' is one counter that increases every time any order is made
+             
+             * Q4(b):
+             * - Answer: No, a static method cannot access the Item field directly.
+             * - Why: Because static methods belong to the class and can run even if no objects exist
+             * The Item field needs a specific object to exist
+             * The static method doesn't know which object's Item it should look at.
+             */
+            #endregion
         }
     }
 }
