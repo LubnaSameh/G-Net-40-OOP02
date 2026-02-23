@@ -87,6 +87,154 @@
              * The static method doesn't know which object's Item it should look at.
              */
             #endregion
-        }
-    }
+
+            #region Part 02 : Execution Logic
+            Cinema myCinema = new Cinema();
+
+            Console.WriteLine("========== Ticket Booking ==========");
+
+            // 5a. Reading data for 3 tickets
+            for (int i = 1; i <= 3; i++)
+            {
+                Console.WriteLine($"\nEnter data for Ticket {i}:");
+                Console.Write("Movie Name: ");
+                string name = Console.ReadLine();
+
+                Console.Write("Ticket Type (0=Standard, 1=VIP, 2=IMAX): ");
+                TicketType type = (TicketType)int.Parse(Console.ReadLine());
+
+                Console.Write("Seat Row (A-Z): ");
+                char row = char.Parse(Console.ReadLine().ToUpper());
+
+                Console.Write("Seat Number: ");
+                int seatNum = int.Parse(Console.ReadLine());
+
+                Console.Write("Price: ");
+                double price = double.Parse(Console.ReadLine());
+
+                myCinema.AddTicket(new Ticket(name, type, new Seat(row, seatNum), price));
+            }
+
+            // 5b. Printing all tickets using indexer
+            Console.WriteLine("\n========== All Tickets ==========");
+            for (int i = 0; i < 3; i++)
+            {
+                if (myCinema[i] != null)
+                    Console.WriteLine(myCinema[i]);
+            }
+
+            // 5c. Search by movie name
+            Console.WriteLine("\n========== Search by Movie ==========");
+            Console.Write("Enter movie name to search: ");
+            string searchName = Console.ReadLine();
+            Ticket found = myCinema.GetMovieByTitle(searchName);
+            if (found != null)
+                Console.WriteLine($"Found: {found}");
+            else
+                Console.WriteLine("Movie not found.");
+
+            // 5d. Total tickets sold
+            Console.WriteLine("\n========== Statistics ==========");
+            Console.WriteLine($"Total Tickets Sold: {Ticket.GetTotalTicketsSold()}");
+
+            // 5e. Generate booking references
+            Console.WriteLine($"Booking Reference 1: {BookingHelper.GenerateBookingReference()}");
+            Console.WriteLine($"Booking Reference 2: {BookingHelper.GenerateBookingReference()}");
+
+            // 5f. Group discount calculation
+            double groupTotal = BookingHelper.CalcGroupDiscount(5, 80);
+            Console.WriteLine($"Group Discount (5 tickets x 80 EGP): {groupTotal} EGP (10% off applied)");
+            #endregion
+             }
+           }
+
+            #region Part 02 : Classes and Structs
+
+            public enum TicketType { Standard, VIP, IMAX }
+
+            public struct Seat
+            {
+                public char Row { get; set; }
+                public int Number { get; set; }
+                public Seat(char row, int number) { Row = row; Number = number; }
+                public override string ToString() => $"{Row}-{Number}";
+            }
+
+            public class Ticket
+            {
+                private string movieName;
+                private double price;
+                private static int ticketCounter = 0;
+
+                public int TicketId { get; private set; }
+                public TicketType Type { get; set; }
+                public Seat Seat { get; set; }
+
+                public string MovieName
+                {
+                    get { return movieName; }
+                    set { if (!string.IsNullOrWhiteSpace(value)) movieName = value; }
+                }
+
+                public double Price
+                {
+                    get { return price; }
+                    set { if (value > 0) price = value; }
+                }
+
+                public double PriceAfterTax => price * 1.14;
+
+                public Ticket(string name, TicketType type, Seat seat, double price)
+                {
+                    ticketCounter++;
+                    TicketId = ticketCounter;
+                    MovieName = name;
+                    Type = type;
+                    Seat = seat;
+                    Price = price;
+                }
+
+                public static int GetTotalTicketsSold() => ticketCounter;
+
+                public override string ToString() =>
+                    $"Ticket #{TicketId} | {MovieName} | {Type} | Seat: {Seat} | Price: {Price} EGP | After Tax: {PriceAfterTax:F2} EGP";
+            }
+
+            public class Cinema
+            {
+                private Ticket[] tickets = new Ticket[20];
+
+                // Indexer with range validation
+                public Ticket this[int index]
+                {
+                    get => (index >= 0 && index < 20) ? tickets[index] : null;
+                    set { if (index >= 0 && index < 20) tickets[index] = value; }
+                }
+
+                public Ticket GetMovieByTitle(string name)
+                {
+                    foreach (var t in tickets)
+                        if (t != null && t.MovieName.Equals(name, StringComparison.OrdinalIgnoreCase)) return t;
+                    return null;
+                }
+
+                public bool AddTicket(Ticket t)
+                {
+                    for (int i = 0; i < 20; i++)
+                    {
+                        if (tickets[i] == null) { tickets[i] = t; return true; }
+                    }
+                    return false;
+                }
+            }
+
+            public static class BookingHelper
+            {
+                private static int refCounter = 0;
+                public static double CalcGroupDiscount(int count, double price) =>
+                    (count >= 5) ? (count * price * 0.9) : (count * price);
+
+                public static string GenerateBookingReference() => $"BK-{++refCounter}";
+            }
+            #endregion
 }
